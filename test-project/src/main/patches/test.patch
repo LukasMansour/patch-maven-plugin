@@ -1,0 +1,9 @@
+diff --git a/src/main/resources/file1 b/src/main/resources/file
+index b6fc4c6..9365db9 100755
+--- a/src/main/resources/file1
++++ b/src/main/resources/file
+@@ -1 +1 @@
+-hello
+\ No newline at end of file
++hella
+\ No newline at end of file
