@@ -26,7 +26,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -44,6 +47,9 @@ public class PatchMojo extends AbstractMojo {
 
     @Parameter(property = "patch.patchDirectory", defaultValue = "src/main/patches")
     private File patchDirectory;
+
+    @Parameter(property = "patch.failOnFailedPatch", defaultValue = "false")
+    private boolean failOnFailedPatch;
 
     public void execute() throws MojoExecutionException {
         getLog().info(targetDirectory.toString());
@@ -66,6 +72,7 @@ public class PatchMojo extends AbstractMojo {
                 UnifiedDiff diff = UnifiedDiffReader.parseUnifiedDiff(
                     new FileInputStream(patchFile));
 
+                Map<Path, List<String>> writeResults = new HashMap<>();
                 for (UnifiedDiffFile file : diff.getFiles()) {
                     Path targetFile = targetDirectory.toPath().resolve(file.getToFile());
                     String targetFileName = targetFile.getFileName().toString();
@@ -75,16 +82,26 @@ public class PatchMojo extends AbstractMojo {
                             Files.readAllLines(targetFile)
                         );
 
-                        Files.write(targetFile, results);
+                        writeResults.put(targetFile, results);
+
                         getLog().info(
                             String.format("Applied diff to '%s' successfully.", targetFileName));
                     } catch (PatchFailedException pfe1) {
-                        getLog().warn(String.format(
+                        String failureMessage = String.format(
                             "Failed to apply patch file '%s' to file '%s'. (It may already have been applied!)",
-                            patchFileName, targetFileName));
+                            patchFileName, targetFileName);
+
+                        if (failOnFailedPatch) {
+                            throw new MojoExecutionException(failureMessage);
+                        } else {
+                            getLog().warn(failureMessage);
+                        }
                         break;
                     }
                     getLog().info(String.format("Finished applying diff to '%s'.", targetFileName));
+                }
+                for (Entry<Path, List<String>> entry : writeResults.entrySet()) {
+                    Files.write(entry.getKey(), entry.getValue());
                 }
                 getLog().info(String.format("Finished applying patch '%s'.", patchFileName));
             }

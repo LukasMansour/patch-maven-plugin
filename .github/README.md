@@ -33,7 +33,7 @@ This plugin is only available for Maven and can be installed with the following 
 <plugin>
   <groupId>io.github.lukasmansour</groupId>
   <artifactId>patch-maven-plugin</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.1.0-SNAPSHOT</version>
   <configuration>
     <targetDirectory>${project.basedir}</targetDirectory>
     <patchDirectory>${project.basedir}\src\main\patches</patchDirectory>

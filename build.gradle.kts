@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "io.github.lukasmansour"
-version = "1.0"
+version = "1.1.0-SNAPSHOT"
 description = "A Maven patch plugin with no dependency on GNU Patch."
 
 java {
