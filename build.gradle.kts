@@ -1,13 +1,13 @@
 plugins {
     id("java")
-    id("de.benediktritter.maven-plugin-development") version ("0.4.2")
+    id("de.benediktritter.maven-plugin-development") version ("0.4.3")
     id("com.gradleup.nmcp") version ("0.0.4")
     `maven-publish`
     signing
 }
 
 group = "io.github.lukasmansour"
-version = "1.1.0-SNAPSHOT"
+version = "1.1.0"
 description = "A Maven patch plugin with no dependency on GNU Patch."
 
 java {
