@@ -35,8 +35,12 @@ This plugin is only available for Maven and can be installed with the following 
   <artifactId>patch-maven-plugin</artifactId>
   <version>1.1.0</version>
   <configuration>
+    <!-- Root directory where the patches are applied.-->
     <targetDirectory>${project.basedir}</targetDirectory>
+    <!-- Directory in which the patches themselves are -->
     <patchDirectory>${project.basedir}\src\main\patches</patchDirectory>
+    <!-- Should the plugin fail the build if a patch is not applied successfully? -->
+    <failOnFailedPatch>false</failOnFailedPatch>
   </configuration>
 
   <!-- And add the execution to the building phase-->
@@ -54,7 +58,12 @@ This plugin is only available for Maven and can be installed with the following 
 
 In the plugin you can configure a ```targetDirectory``` and a ```patchDirectory```.
 the ```targetDirectory``` is the root in which patches will be applied. The ```patchDirectory``` is
-the location of the patches.
+the location of the patches. 
+
+Furthermore you can set the ```failOnFailedPatch``` setting, which will fail the build if a patch
+is not applied successfully. Here it may be necessary to add an instance of the ```maven-clean-plugin```
+to your execution lifestyle. This is because usually an already patched file cannot be successfully 
+patched (by the same patch) again.
 
 There is also an example in the repository [here](../test-project).
 
